@@ -21,10 +21,11 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Middlewares
 app.use(express.json());
+const cors = require('cors');
 app.use(cors({
-    origin: 'http://localhost:5173', // Your local frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    origin: ['http://localhost:5173', 'https://your-frontend-domain.vercel.app'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(morgan('tiny'));
 
