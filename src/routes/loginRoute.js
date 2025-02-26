@@ -1,39 +1,40 @@
-// routes/login.js
+// src/routes/loginRoute.js
+const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/signUpModel');
+const router = express.Router();
 
-const login = async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Find the user by email
+        // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).send('User not found');
+            return res.status(400).json({ message: 'User not found' });
         }
 
-        // Compare the password with the hashed password in the database
+        // Check password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).send('Invalid credentials');
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Generate JWT token, include userId and firstName in the token payload
+        // Generate token
         const token = jwt.sign({ 
             userId: user._id, 
-            firstName: user.firstName  // Use firstName for consistency
+            firstName: user.firstName 
         }, process.env.SECRET, { 
-            expiresIn: '8h', // Token expires in 8 hours
+            expiresIn: '8h',
         });
 
-        // Send token in the response
+        // Send token in response
         return res.json({ token });
-
     } catch (error) {
         console.error('Login Error:', error);
-        return res.status(500).send('Server Error');
+        return res.status(500).json({ message: 'Server Error' });
     }
-};
+});
 
-module.exports = login;
+module.exports = router;
