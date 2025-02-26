@@ -17,3 +17,7 @@ router.use('/todos', isLoggedIn, updateTodoRoute);
 router.use('/todos', isLoggedIn, deleteTodoRoute);
 
 module.exports = router;
+
+
+
+/// rearranged structure for testing
