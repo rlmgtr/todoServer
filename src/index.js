@@ -21,9 +21,11 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Middlewares
 app.use(express.json());
-const cors = require('cors');
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend URL
+    origin: [
+        'http://localhost:5173',                     // Local development
+        'https://your-frontend-domain.vercel.app'    // Deployed frontend URL
+    ],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true
 }));
@@ -35,6 +37,3 @@ app.use(router);
 
 // Export for Vercel
 module.exports = app;
-
-
-// installed dependencies for testing
